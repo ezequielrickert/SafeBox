@@ -1,0 +1,41 @@
+@startuml
+actor User
+participant "SafeBox"
+participant "Server"
+participant "Database"
+actor "Admin" as A
+User -> SafeBox: Login
+"SafeBox" -> "Server": requestLogin
+"Server" -> "Database": checkUser
+"Database" --> "Server": loginApproval: boolean
+"Server" --> "SafeBox": loginApproval: boolean
+SafeBox --> User: loginApproval: boolean
+alt loginApproval = true
+alt User/Admin
+User -> SafeBox: requestMoney
+SafeBox -> Server: requestMoney
+Server -> Database: checkMoney
+Database --> Server: moneyApproval: boolean
+alt moneyApproval = true
+Server --> "Database": extractMoney
+Database --> Server: money
+Server --> SafeBox: money
+SafeBox --> User: money
+else moneyApproval = false
+"Database" --> "Server": error
+"Server" --> "SafeBox": error
+SafeBox --> User: error
+end
+else Admin
+User -> Server: setPrivilage
+Server -> "Database": checkAdmin
+"Database" --> Server: isAdmin: boolean
+alt "Admin" = True
+"Server" -> "Database": setMax
+"Database" --> Server: changed: boolean
+else "Admin" = False
+"Server"--> "User": error
+end
+else loginApproval = false
+end
+@enduml
