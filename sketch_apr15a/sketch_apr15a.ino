@@ -2,6 +2,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <Keypad.h>
 
+
 // Dirección I2C de la pantalla LCD 1602
 const int I2C_ADDR = 0x27;
 
